@@ -80,7 +80,7 @@ Main (Node3D)
 ## Projections
 
 - **Panini** (recommended): wide-angle correction, keeps vertical lines straight and lines from center of screen straight
-  Best for 90–150° FOV. Typical `strength`: 0.3–0.5.
+  - Best for 90–150° FOV. Typical `strength`: 0.3–0.5.
 - **Rectilinear**: standard perspective (reference)
 - **Cylindrical / Spherical**: panoramic mappings
 - **Fisheye**: extreme wide-angle (>150°)
