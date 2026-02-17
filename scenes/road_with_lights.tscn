@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://bjrb15tt5b4ti"]
+
+[ext_resource type="PackedScene" uid="uid://cgqynoqsb3xto" path="res://assets/kenney_city-kit-roads/road-straight.glb" id="1_tgm7p"]
+[ext_resource type="PackedScene" uid="uid://d1bgx66ry521k" path="res://assets/kenney_city-kit-roads/light-curved.glb" id="2_7gxf1"]
+
+[node name="RoadWithLights" type="Node3D" unique_id=1301834590]
+
+[node name="road-straight2" parent="." unique_id=723981720 instance=ExtResource("1_tgm7p")]
+
+[node name="light-curved2" parent="road-straight2" unique_id=1441728223 instance=ExtResource("2_7gxf1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="road-straight2/light-curved2" unique_id=1357249138]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.0419044, -1.3045716)
+light_color = Color(1, 0.83599997, 0.76, 1)
+shadow_enabled = true
+omni_range = 20.0
+omni_attenuation = 2.0
+
+[node name="light-curved3" parent="road-straight2" unique_id=371313876 instance=ExtResource("2_7gxf1")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, -5)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="road-straight2/light-curved3" unique_id=1332170063]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.684342e-14, 5.0419044, -1.3045716)
+light_color = Color(1, 0.83599997, 0.76, 1)
+shadow_enabled = true
+omni_range = 20.0
+omni_attenuation = 2.0

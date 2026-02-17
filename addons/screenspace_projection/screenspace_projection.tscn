@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://7l5j66jr6abv"]
+
+[ext_resource type="Script" uid="uid://d06w6qvkqm62r" path="res://addons/screenspace_projection/screenspace_projection.gd" id="1_qki4j"]
+[ext_resource type="Shader" uid="uid://d3q7ed1bj00d4" path="res://addons/screenspace_projection/screenspace_projection.gdshader" id="2_7752h"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_noarx"]
+render_priority = 0
+shader = ExtResource("2_7752h")
+shader_parameter/enabled = true
+shader_parameter/projection_mode = 1
+shader_parameter/strength = 0.5
+shader_parameter/fill = 1.0
+shader_parameter/panini_s = 0.0
+shader_parameter/max_major_radius = 5
+shader_parameter/max_minor_radius = 3
+shader_parameter/fov_is_vertical = true
+shader_parameter/fov_deg = 150.0
+shader_parameter/ca_amount = 0.0
+shader_parameter/ca_amount_spread = 0.5
+shader_parameter/ca_reference_wavelength = 540.0
+shader_parameter/ca_enable_start = 0.5
+shader_parameter/ca_jitter = true
+shader_parameter/ca_max_samples = 16
+shader_parameter/ca_samples_per_ca = 0.5
+shader_parameter/vignette_strength = 0.0
+shader_parameter/vignette_spread = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_ycdy4"]
+
+[node name="ScreenSpaceProjection" type="Camera3D" unique_id=2131587968]
+projection = 1
+current = true
+near = 0.5
+far = 2.0
+script = ExtResource("1_qki4j")
+
+[node name="_ProjectionOutput" type="MeshInstance3D" parent="." unique_id=387850907]
+physics_interpolation_mode = 2
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+visible = false
+material_override = SubResource("ShaderMaterial_noarx")
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_ycdy4")
+
+[node name="ProjectionInput" type="SubViewport" parent="." unique_id=1493971111]
+own_world_3d = true
+use_hdr_2d = true
+scaling_3d_mode = 2

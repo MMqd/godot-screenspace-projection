@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://6ue6d4gl0nup"]
+
+[ext_resource type="PackedScene" uid="uid://7l5j66jr6abv" path="res://addons/screenspace_projection/screenspace_projection.tscn" id="1_4c57u"]
+[ext_resource type="Script" uid="uid://bu20byed0iwi4" path="res://code/fps.gd" id="1_dg77c"]
+[ext_resource type="Script" uid="uid://c8loy7tke5nj5" path="res://code/preset_selector.gd" id="1_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://dioxlov7b8m2g" path="res://scenes/level0.tscn" id="3_sugp2"]
+
+[sub_resource type="Environment" id="Environment_272bh"]
+background_mode = 4
+ambient_light_source = 1
+ambient_light_sky_contribution = 0.0
+reflected_light_source = 1
+tonemap_mode = 4
+tonemap_agx_contrast = 1.5
+glow_enabled = true
+glow_levels/1 = 16.0
+glow_levels/2 = 4.0
+glow_levels/3 = 1.0
+glow_levels/4 = 0.25
+glow_levels/5 = 0.06
+glow_levels/6 = 0.02
+glow_normalized = true
+glow_intensity = 1.0
+glow_strength = 0.5
+glow_mix = 0.5
+glow_blend_mode = 4
+glow_hdr_threshold = 0.0
+glow_hdr_scale = 0.0
+glow_hdr_luminance_cap = 256.0
+
+[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_jyhfs"]
+frustum_focus_distance = 1.0
+frustum_focal_length = 1.0
+frustum_near = 0.5
+frustum_far = 1.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_kek77"]
+font_size = 32
+outline_size = 20
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Main" type="Node3D" unique_id=1369413391]
+
+[node name="Projection" parent="." unique_id=1708432616 instance=ExtResource("1_4c57u")]
+environment = SubResource("Environment_272bh")
+attributes = SubResource("CameraAttributesPhysical_jyhfs")
+
+[node name="Level0" parent="Projection/ProjectionInput" parent_id_path=PackedInt32Array(1708432616, 1493971111) index="0" unique_id=314479356 instance=ExtResource("3_sugp2")]
+
+[node name="DemoUI" type="VBoxContainer" parent="." unique_id=1614559278]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 95.0
+offset_bottom = 99.0
+
+[node name="PresetSelector" type="Label" parent="DemoUI" unique_id=798436180]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_kek77")
+script = ExtResource("1_jyhfs")
+projection_node = NodePath("../../Projection")
+transition_time = 0.4
+
+[node name="FPS" type="Label" parent="DemoUI" unique_id=1380862770]
+visible = false
+layout_mode = 2
+text = "FPS: 0"
+label_settings = SubResource("LabelSettings_kek77")
+script = ExtResource("1_dg77c")
+
+[editable path="Projection"]
