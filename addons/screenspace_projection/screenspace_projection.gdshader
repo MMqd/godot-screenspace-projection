@@ -206,12 +206,18 @@ vec4 sample_anisotropic(
 	vec2 dsource_dx_uv,
 	vec2 dsource_dy_uv
 ) {
+	/*
+	Old implementation (kept for reference):
 	#define IN01(U) (all(greaterThanEqual((U), vec2(0.0))) && all(lessThanEqual((U), vec2(1.0))))
 	#define ACCUM(NEED_CHECK, UV, W) \
 		if (!(NEED_CHECK) || IN01(UV)) { \
 			sum  += textureGrad(tex, (UV), dsource_dx_uv, dsource_dy_uv) * (W); \
 			wsum += (W); \
 		}
+
+	Some Godot 4.6.x setups fail macro expansion in this block and report:
+	"Unknown identifier in expression: NEED_CHECK".
+	*/
 
 	vec2 inv_texel_uv = 1.0 / max(texel_uv, vec2(EPS));
 	vec2 fp_dx_tex = dsource_dx_uv * inv_texel_uv;
@@ -260,7 +266,11 @@ vec4 sample_anisotropic(
 		vec4 sum = vec4(0.0);
 		float wsum = 0.0;
 
-		ACCUM(need_check, base_uv, 1.0)
+		// Compatibility fix: use explicit accumulation instead of multiline macros.
+		if (!need_check || in_01(base_uv)) {
+			sum += textureGrad(tex, base_uv, dsource_dx_uv, dsource_dy_uv);
+			wsum += 1.0;
+		}
 
 		for (int mi = 1; mi <= 9; mi += 2) {
 			if (mi > major_radius) break;
@@ -274,12 +284,30 @@ vec4 sample_anisotropic(
 				float pair = (float(mi) * w0 + float(mi1) * w1) / W;
 
 				vec2 o = major_step_uv * pair;
-				ACCUM(need_check, base_uv + o, W)
-				ACCUM(need_check, base_uv - o, W)
+				vec2 uv_plus = base_uv + o;
+				if (!need_check || in_01(uv_plus)) {
+					sum += textureGrad(tex, uv_plus, dsource_dx_uv, dsource_dy_uv) * W;
+					wsum += W;
+				}
+
+				vec2 uv_minus = base_uv - o;
+				if (!need_check || in_01(uv_minus)) {
+					sum += textureGrad(tex, uv_minus, dsource_dx_uv, dsource_dy_uv) * W;
+					wsum += W;
+				}
 			} else {
 				vec2 o = major_step_uv * float(mi);
-				ACCUM(need_check, base_uv + o, w0)
-				ACCUM(need_check, base_uv - o, w0)
+				vec2 uv_plus = base_uv + o;
+				if (!need_check || in_01(uv_plus)) {
+					sum += textureGrad(tex, uv_plus, dsource_dx_uv, dsource_dy_uv) * w0;
+					wsum += w0;
+				}
+
+				vec2 uv_minus = base_uv - o;
+				if (!need_check || in_01(uv_minus)) {
+					sum += textureGrad(tex, uv_minus, dsource_dx_uv, dsource_dy_uv) * w0;
+					wsum += w0;
+				}
 			}
 		}
 
@@ -291,9 +319,6 @@ vec4 sample_anisotropic(
 		minor_sum  += (sum / wsum) * wj;
 		minor_wsum += wj;
 	}
-
-	#undef ACCUM
-	#undef IN01
 
 	return minor_sum / minor_wsum;
 }
